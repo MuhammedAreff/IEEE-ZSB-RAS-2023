@@ -12,6 +12,7 @@ void main(){
         for(int j = i +  1; j < size; j++){
             if(arr[j] == arr[i]){
                 count++;
+                break;
             }
         }
     }
