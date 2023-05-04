@@ -34,3 +34,13 @@ int main() {
     return 0;
 }
 */
+
+// *******the differences between them and the regular sizeof()********
+
+/*The regular sizeof() operator is a built-in operator in C that is always available and is evaluated at compile-time.
+
+The macro implementation of sizeof() can be used to calculate the size of statically allocated types at compile-time, but cannot be used for dynamically allocated types.
+
+The inline implementation of sizeof() can be used to calculate the size of dynamically allocated types at runtime, 
+but may be less efficient than the regular sizeof() operator or the macro implementation.
+*/
