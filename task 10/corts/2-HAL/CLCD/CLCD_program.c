@@ -1,0 +1,113 @@
+#include"STD_TYPES.h"
+#include "BIT_MATH.h"
+#include "util/delay.h"
+#include "DIO_interface.h"
+#include "CLCD_interface.h"
+
+void CLCD_voidSendData(u8 CLCD_u8Data)
+{
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_HIGH,DIO_PIN0);
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_LOW,DIO_PIN1);
+	DIO_voidSetPortVal(DIO_PORTA,CLCD_u8Data);
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_HIGH,DIO_PIN2);
+	_delay_ms(1);
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_LOW,DIO_PIN2);
+}
+void CLCD_voidSendCommand(u8 CLCD_u8Command)
+{
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_LOW,DIO_PIN0);
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_LOW,DIO_PIN1);
+	DIO_voidSetPortVal(DIO_PORTA,CLCD_u8Command);
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_HIGH,DIO_PIN2);
+	_delay_ms(1);
+	DIO_voidSetPinVal(DIO_PORTC,DIO_PIN_VAL_LOW,DIO_PIN2);
+}
+
+void CLCD_voidClear(void)
+{
+	CLCD_voidSendCommand(0x01);
+}
+
+void CLCD_voidInit(void)
+{
+	DIO_voidSetPortDir(DIO_PORTA,DIO_PORT_OUT);
+	DIO_voidSetPinDir(DIO_PORTC,DIO_PIN_DIR_OUT,DIO_PIN0);
+	DIO_voidSetPinDir(DIO_PORTC,DIO_PIN_DIR_OUT,DIO_PIN1);
+	DIO_voidSetPinDir(DIO_PORTC,DIO_PIN_DIR_OUT,DIO_PIN2);
+	_delay_ms(40);
+	CLCD_voidSendCommand(0b00111000);
+	_delay_ms(1);
+	CLCD_voidSendCommand(0b00001100);
+	_delay_ms(1);
+	CLCD_voidSendCommand(0b00000001);
+	_delay_ms(2);
+}
+
+
+
+void CLCD_voidString(u8*pvString)
+{
+	u8 i =0;
+	while(pvString[i]!='\0')
+	{
+		CLCD_voidSendData(pvString[i]);
+		i++;
+	}
+}
+
+void CLCD_void_Save_in_CGRAM(void)
+{
+	CLCD_voidSendCommand(0b01000000);  //0x40   0b 0100 0000
+	//spongebob
+	CLCD_voidSendData(0b11111);
+	CLCD_voidSendData(0b10001);
+	CLCD_voidSendData(0b10001);
+	CLCD_voidSendData(0b11011);
+	CLCD_voidSendData(0b11111);
+	CLCD_voidSendData(0b11111);
+	CLCD_voidSendData(0b01010);
+	CLCD_voidSendData(0b11011);
+
+
+
+
+	// blocks
+	CLCD_voidSendData(0b01010);
+	CLCD_voidSendData(0b10101);
+	CLCD_voidSendData(0b01010);
+	CLCD_voidSendData(0b10101);
+	CLCD_voidSendData(0b01010);
+	CLCD_voidSendData(0b10101);
+	CLCD_voidSendData(0b01010);
+	CLCD_voidSendData(0b10101);
+
+	// tetris
+	CLCD_voidSendData(0b00110);
+	CLCD_voidSendData(0b00100);
+	CLCD_voidSendData(0b00101);
+	CLCD_voidSendData(0b10001);
+	CLCD_voidSendData(0b10001);
+	CLCD_voidSendData(0b11011);
+	CLCD_voidSendData(0b11011);
+	CLCD_voidSendData(0b01111);
+
+
+}
+
+
+void CLCD_voidGoToPosition(u8 CLCD_u8x,u8 CLCD_u8y)
+{
+	u8 CLCD_u8Position;
+	if(CLCD_u8x==0)
+	{
+		CLCD_u8Position=CLCD_u8y;
+	}
+	else if(CLCD_u8x==1)
+	{
+		CLCD_u8Position=CLCD_u8y+0x40;
+	}
+	CLCD_voidSendCommand(CLCD_u8Position+128);
+}
+
+
+
